@@ -12,8 +12,8 @@ import { AuthService } from '../../core/auth.service';
   styleUrls: ['./signin.component.css']
 })
 export class SigninComponent implements OnInit {
-  signInForm: FormGroup;
-
+  public signInForm: FormGroup;
+  public hide = true;
 
   constructor(
     public fb: FormBuilder,

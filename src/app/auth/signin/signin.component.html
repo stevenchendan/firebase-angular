@@ -1,3 +1,11 @@
-<p>
-  signin works!
-</p>
+<form class="example-form" [formGroup]="signInForm"(ngSubmit)="signIn()">
+  <h3>Welcome</h3>
+  <mat-form-field class="example-full-width" [formGroup]="signInForm">
+    <input type="text" matInput placeholder="Email" [formControl]="email" required>
+    <mat-error *ngIf="email.valid">Not Valid. Try again</mat-error>
+  </mat-form-field>
+  <mat-form-field class="example-full-width" [formGroup]="signInForm">
+    <input type="text" matInput placeholder="Password" [formControl]="password" required>
+    <mat-error *ngIf="password.valid">Not Valid. Try again</mat-error>
+  </mat-form-field>
+</form>
