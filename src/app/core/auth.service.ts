@@ -29,9 +29,10 @@ export class AuthService {
     });
   }
   emailSignIn(email: string, password: string) {
-    return this.afAuth.auth.signInWithEmailAndPassword(email, password)
-      .then(() => console.log('You have signed in'))
-      .catch(() => console.log('error message0'));
+    return this.afAuth.auth
+      .signInWithEmailAndPassword(email, password)
+      .then(() => console.log('You have successfully signed in'))
+      .catch(error => console.log(error.message));
   }
 
   singOut() {

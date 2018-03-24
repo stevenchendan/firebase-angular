@@ -13,7 +13,7 @@ import { AuthService } from '../../core/auth.service';
 })
 export class SigninComponent implements OnInit {
   public signInForm: FormGroup;
-  public hide = true;
+  public hide = true;   // toggle the password
 
   constructor(
     public fb: FormBuilder,
@@ -21,10 +21,11 @@ export class SigninComponent implements OnInit {
     private router: Router
   ) {
     this.signInForm = this.fb.group({
-      email: ['', Validators.email, Validators.required ],
-      password: ['',
+      email: ['', [Validators.required, Validators.email]],
+      password: [
+        '',
         [
-          Validators.pattern(''),
+          Validators.pattern('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$'),
           Validators.minLength(6),
           Validators.maxLength(25)
         ]
@@ -43,7 +44,8 @@ export class SigninComponent implements OnInit {
   }
 
   signIn() {
-    return this.auth.emailSignIn(this.email.value, this.password.value)
+    return this.auth
+      .emailSignIn(this.email.value, this.password.value)
       .then(user => {
         if (this.signInForm.valid) {
           this.router.navigate(['/']);
