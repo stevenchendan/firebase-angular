@@ -1,6 +1,13 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
-    <span>Angular-Firebase</span>
+    <span>Angular-Firebase
+    </span>
+    <span class="example-spacer"></span>
+    <span style="float: right;">
+      <button [routerLink]="['/signin']" mat-button >Sign In</button>
+       <button [routerLink]="['/signup']" mat-button >Sign Up</button>
+    </span>
   </mat-toolbar-row>
 </mat-toolbar>
 <router-outlet></router-outlet>
+

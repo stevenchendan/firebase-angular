@@ -35,10 +35,20 @@ export class AuthService {
       .catch(error => console.log(error.message));
   }
 
+  emailSignUp(email: string, password: string) {
+    return this.afAuth.auth
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => console.log('You have signed up'));
+  }
+
   singOut() {
     return this.afAuth.auth.signOut()
-      .then(()=> {
+      .then(() => {
         this.router.navigate(['/']);
-      })
+      });
+  }
+
+  private updateUserData(user: User) {
+
   }
 }
