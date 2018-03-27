@@ -17,11 +17,13 @@ export class SignupComponent implements OnInit {
     private auth: AuthService,
     private router: Router
   ) {
-    this.signupForm = fb.group({
-      email: ['', Validators.email, Validators.required],
+    this.signupForm = this.fb.group({
+      email: ['', [Validators.email, Validators.required]],
       password: ['',
-        Validators.maxLength(26),
-        Validators.minLength(6)]
+        [
+          Validators.maxLength(26),
+          Validators.minLength(6)]
+        ]
     });
   }
 

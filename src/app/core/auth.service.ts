@@ -38,6 +38,7 @@ export class AuthService {
   emailSignUp(email: string, password: string) {
     return this.afAuth.auth
       .createUserWithEmailAndPassword(email, password)
+      .then(user => this.updateUser(user))
       .then(() => console.log('You have signed up'));
   }
 
@@ -48,7 +49,14 @@ export class AuthService {
       });
   }
 
-  private updateUserData(user: User) {
-
+  private updateUser(user: User) {
+    const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
+    const data: User = {
+      uid: user.uid,
+      email: user.email || null,    // just in case we do not receive the email
+      displayName: user.displayName,
+      photoURL: user.photoURL
+    };
+    return userRef.set(data, {merge: true});
   }
 }
