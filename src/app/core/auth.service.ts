@@ -4,6 +4,8 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
+import {Md5} from 'ts-md5/dist/md5';
+import * as firebase from 'firebase/app';
 
 interface User {
   uid: string;
@@ -14,7 +16,7 @@ interface User {
 
 @Injectable()
 export class AuthService {
-  user: Observable<User>
+  user: Observable<User>;
   constructor(
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
@@ -39,7 +41,8 @@ export class AuthService {
     return this.afAuth.auth
       .createUserWithEmailAndPassword(email, password)
       .then(user => this.updateUser(user))
-      .then(() => console.log('You have signed up'));
+      .then(() => console.log('You have signed up'))
+      .then(() => this.afAuth.auth.currentUser.sendEmailVerification());
   }
 
   singOut() {
@@ -55,8 +58,14 @@ export class AuthService {
       uid: user.uid,
       email: user.email || null,    // just in case we do not receive the email
       displayName: user.displayName,
-      photoURL: user.photoURL
+      photoURL: user.photoURL ||
+      'http://www.gravatar.com/avatar/' + Md5.hashStr(user.uid) + '?d=mm'
     };
     return userRef.set(data, {merge: true});
+  }
+
+  resetPassword(email: string) {
+    return firebase.auth().sendPasswordResetEmail(email)
+      .then(() => console.log('Reset email has been sent'));
   }
 }
