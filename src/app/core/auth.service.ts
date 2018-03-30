@@ -17,6 +17,8 @@ interface User {
 @Injectable()
 export class AuthService {
   user: Observable<User>;
+  state: any = null;
+
   constructor(
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
@@ -29,12 +31,44 @@ export class AuthService {
         return Observable.of(null);
       }
     });
+    this.afAuth.authState.subscribe(data => {
+      this.state = data;
+    });
   }
+
+  get authenticated(): boolean {
+    return this.state !== null;
+  }
+
+  get currentUserId(): string {
+    return this.authenticated ? this.state.uid : null;
+  }
+
   emailSignIn(email: string, password: string) {
     return this.afAuth.auth
       .signInWithEmailAndPassword(email, password)
       .then(() => console.log('You have successfully signed in'))
       .catch(error => console.log(error.message));
+  }
+
+  googleLogin() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    return this.socialLogin(provider);
+  }
+
+  githubLogin() {
+    const provider = new firebase.auth.GithubAuthProvider;
+    return this.socialLogin(provider);
+  }
+
+  twitterLogin() {
+    const provider = new firebase.auth.TwitterAuthProvider();
+    return this.socialLogin(provider);
+  }
+
+  facebookLogin() {
+    const provider = new firebase.auth.FacebookAuthProvider();
+    return this.socialLogin(provider);
   }
 
   emailSignUp(email: string, password: string) {
@@ -67,5 +101,12 @@ export class AuthService {
   resetPassword(email: string) {
     return firebase.auth().sendPasswordResetEmail(email)
       .then(() => console.log('Reset email has been sent'));
+  }
+
+  private socialLogin(provider) {
+    return this.afAuth.auth.signInWithRedirect(provider)
+      .then(credential => {
+        return this.updateUser(credential.user);
+      });
   }
 }

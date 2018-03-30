@@ -12,3 +12,13 @@ button {
   margin-top: 15px;
   color: inherit;
 }
+
+main {
+  display: grid;
+  align-items: center;
+  grid-template-rows: 100vh;
+}
+section {
+  max-width: 600px;
+  margin: auto;
+}
